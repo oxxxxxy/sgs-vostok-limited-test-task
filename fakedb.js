@@ -1,7 +1,6 @@
 import assert from 'node:assert';
 
-import _ from 'lodash';
-
+import u from './utils.js';
 
 /*	
  *	Этот файл имитирует базу данных и запросы к бд.
@@ -44,7 +43,7 @@ const fakeFindRequest = function (queryObj) {
 		return keys.every(k => row[k] === queryObj[k])
 	};
 
-	if(_.isEmpty(queryObj)){
+	if(u.isEmpty(queryObj)){
 		return this.table;
 	}	else {
 		return this.table.filter(e => doesRowMatchQuery(e, queryObj));

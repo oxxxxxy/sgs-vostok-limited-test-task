@@ -33,33 +33,39 @@ app.set("view engine", "ejs");
 
 app.get('/', async (req, res) => {
 
-	let dbQuery = {};
+	const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, allowedQueryParameters);
 
-	if(!u.isEmpty(req.query)){
-		dbQuery = u.makeDBQueryFromReqParamQuery(req.query, allowedQueryParameters);
-	}
 
 	const rows = await DB.query(dbQuery);
 
-	console.log(rows.slice(0, 3));
+	const ejsOptions = {};
 
-	const cities = rows.filter(
+
+	ejsOptions.cities = rows.filter(
 		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`city`)
-	);
-	const cityExamples = cities.slice(0, 5);
+	).map(e => e.city);
+	ejsOptions.cityExamples = cities.slice(0, 5);
 
-	const plantShops = rows.filter(
+	ejsOptions.plantShops = rows.filter(
 		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`plantShop`)
-	);
-	const plantShopExamples = plantShops.slice(0, 5);
+	).map(e => e.plantShop);
+	ejsOptions.plantShopExamples = plantShops.slice(0, 5);
 
-	const emploees = rows.filter(
-		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`emploee`)
-	);
-	const emploeeExamples = emploees.slice(0, 5);
-																	
+	ejsOptions.emploees = rows.map(e => e.emploee);
+	ejsOptions.emploeeExamples = emploees.slice(0, 5);
 
-	res.render('index')
+
+	if(!u.isEmpty(req.query)){
+		ejsOptions.rows = rows;
+	}
+
+console.log(
+ejsOptions.cityExamples,
+ejsOptions.plantShopExamples,
+ejsOptions.emploeeExamples);
+
+	res.render('index', ejsOptions);
+
 });
 
 
