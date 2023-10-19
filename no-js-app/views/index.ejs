@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <link rel="stylesheet" href="/style.css"/>
+	    <title>SSR Realization</title>
+	</head>
+	<body>
+		<div>
+			<div class="text">
+				<h1>Server-Side Rendering</h>
+			</div>
+		<div>
+			<div class="text">
+				<p>Выберите/введите город и отправьте форму.</p>
+			</div>
+		</div>
+		<div>
+			<div>
+				<form action="/no-js-app">
+					<label>Город. Введите название:</label>
+					<br/>
+					<input list="cities" type="text" name="city">
+					<datalist id="cities">
+						<option value="asdf">
+						<option value="aaasdf">
+						<option value="aasdf">
+					</datalist>
+					<br/>
+					<input type="submit" value="Отправить">
+				</form>
+			</div>
+			<div>
+				<p>Город. Пример данных:</p>
+				<div>
+					<ul>
+						<li><p>adsf</p></li>
+						<li><p>asdffg</p></li>
+					</ul>
+				</div>
+			</div>
+	</body>
+</html>
+
