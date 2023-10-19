@@ -6,7 +6,6 @@
 import assert from 'node:assert';
 
 
-
 const fakeTable = [
 	{city:'Gorod ABC', plantShop:'Цех ABC', workFrom:'8', workUntil:'20', brigade:'Brigada ABC', emploee:'Petya Ivanov'}
 	,{city:'Gorod ABC', plantShop:'Цех ABC', workFrom:'8', workUntil:'20', brigade:'Brigada ABC', emploee:'Vasya Grishev'}
@@ -73,7 +72,8 @@ const testQuery = {workUntil:'8', city:'Gorod BCA'};
 const testQueryRes = await FakeDataBase.query(testQuery);
 
 assert.ok(
-	testQueryRes.every(e => e.workUntil === testQuery.workUntil)
-	&&
-	testQueryRes.every(e => e.city === testQuery.city)
+	testQueryRes.every(e =>
+		e.workUntil === testQuery.workUntil
+		&& e.city === testQuery.city
+	)
 );

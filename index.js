@@ -1,33 +1,62 @@
 import http from 'node:http';
-import express from 'express';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-import pugApp from './pug-rendering/pug-rendering.js';
-import vueApp from './vue-rendering/vue-rendering.js';
+import express from 'express';
+import helmet from "helmet";
+import compression from 'compression';
+import pug from 'pug';
+
+import noJsApp from './no-js-app/index.js';
+import vueApp from './vue-app/index.js';
 import fakeDB from './fakedb.js';
 
-
 // для упрощения себе задачи я буду использовать global scope
+// и подобие базы данных
 global.DB = fakeDB;
 
 
-
 const app = express();
-const router = express.Router();
+
+app.use(compression());
 
 
-// TODO: make normal init page
-app.use('/', (req, res) => {
-		res.send(`
-				<div><h1>SGS Vostok Limited test task</h1></div>
-				<div><a href="/pug">/pug</a> Server-Side Rendering task implementation</div>
-				<div><a href="/vue">/vue</a> Client-Side Rendering task implementation</div>
-			`);
-	}
-)
+//
+// some security
+//
 
-app.use('/pug', pugApp);
+app.use(helmet());
 
 
+//
+// public assets
+//
+
+app.use(express.static(path.join(__dirname, "public")));
+
+
+//
+// app
+//
+
+app.use('/no-js-app', noJsApp);
+
+//app.use('/vue-app', vueApp);
+
+const indexPage = pug.compileFile('./index.pug')();
+app.get('/', (req, res) => {
+	res.send(indexPage);
+});
+
+app.use((req, res, next) => {
+  res.status(404).sendStatus(404);
+})
+
+
+//
+// server
+// 
 
 const server = http.createServer(app);
 
