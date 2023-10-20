@@ -113,6 +113,24 @@ input[type=submit] {
   overflow-x: scroll;
 }
 
+.outputDiv{
+	margin-top: 10px;
+  width: 100%;
+  padding: 0px 10px 0px 10px;
+}
+
+table{
+	width: 100%;
+  table-layout: auto;
+  border: 2px solid black;
+  padding-top: 10px;
+}
+
+td{
+	text-align: start;
+	padding:3px;
+}
+
 @media (max-width:750px){
 	.formInputLine {
 		flex-direction:column;
