@@ -54,6 +54,8 @@ app.get('/', async (req, res) => {
 	ejsOptions.emploeeExamples = ejsOptions.emploees.slice(0, 5);
 
 
+	ejsOptions.rows = [];
+
 	if(!u.isEmpty(req.query)){
 		ejsOptions.rows = rows;
 	}
