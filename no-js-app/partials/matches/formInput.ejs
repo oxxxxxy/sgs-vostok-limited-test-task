@@ -1,0 +1,29 @@
+<div>
+	<div>
+		<p><%= titleText %>. Введите название:</p>
+		<input list="<%= listName %>" type="text" name="<%= formInputName %>">
+		<datalist id="<%= listName %>">
+
+			<% dataListOptions.forEach( function(op) { %>
+			
+				<option value="<%= op %>">
+
+			<% }); %>
+
+		</datalist>
+	</div>
+	<div>
+		<p><%= titleText %>. Пример данных:</p>
+		<div>
+			<ul>
+
+				<% dataExamples.forEach( function(e) { %>
+
+					<li><p><%= e %></p></li>
+
+				<% }); %>
+
+			</ul>
+		</div>
+	</div>
+</div>

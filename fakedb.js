@@ -46,7 +46,13 @@ const fakeFindRequest = function (queryObj) {
 	if(u.isEmpty(queryObj)){
 		return this.table;
 	}	else {
-		return this.table.filter(e => doesRowMatchQuery(e, queryObj));
+		let arr = this.table.filter(e => doesRowMatchQuery(e, queryObj));
+
+		if(!Array.isArray(arr)) {
+			arr = [];
+		}
+
+		return arr;
 	}
 }
 
