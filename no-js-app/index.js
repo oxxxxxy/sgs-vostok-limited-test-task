@@ -65,13 +65,6 @@ app.get('/', async (req, res) => {
 		ejsOptions.noMatches = true;
 	}
 
-console.log(
-	ejsOptions.cities,
-ejsOptions.cityExamples,
-ejsOptions.plantShopExamples,
-ejsOptions.emploeeExamples
-);
-
 	res.render('index', ejsOptions);
 
 });
