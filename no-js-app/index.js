@@ -56,7 +56,7 @@ app.get('/', async (req, res) => {
 
 	ejsOptions.rows = [];
 
-	if(!u.isEmpty(req.query)){
+	if(!u.isEmpty(dbQuery)){
 		ejsOptions.rows = rows;
 	}
 
