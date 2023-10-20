@@ -35,40 +35,40 @@ app.get('/', async (req, res) => {
 
 	const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, allowedQueryParameters);
 
-
 	const rows = await DB.query(dbQuery);
 
 	const ejsOptions = {};
 
-	if(rows.length){
 
-		ejsOptions.cities = rows.filter(
-			u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`city`)
-		).map(e => e.city);
-		ejsOptions.cityExamples = ejsOptions.cities.slice(0, 5);
+	ejsOptions.cities = rows.filter(
+		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`city`)
+	).map(e => e.city);
+	ejsOptions.cityExamples = ejsOptions.cities.slice(0, 5);
 
-		ejsOptions.plantShops = rows.filter(
-			u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`plantShop`)
-		).map(e => e.plantShop);
-		ejsOptions.plantShopExamples = ejsOptions.plantShops.slice(0, 5);
+	ejsOptions.plantShops = rows.filter(
+		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`plantShop`)
+	).map(e => e.plantShop);
+	ejsOptions.plantShopExamples = ejsOptions.plantShops.slice(0, 5);
 
-		ejsOptions.emploees = rows.map(e => e.emploee);
-		ejsOptions.emploeeExamples = ejsOptions.emploees.slice(0, 5);
+	ejsOptions.emploees = rows.map(e => e.emploee);
+	ejsOptions.emploeeExamples = ejsOptions.emploees.slice(0, 5);
 
-		if(!u.isEmpty(req.query)){
-			ejsOptions.rows = rows;
-		}
 
-	} else {
-		
+	if(!u.isEmpty(req.query)){
+		ejsOptions.rows = rows;
+	}
+
+
+	if(!rows.length) {	
 		ejsOptions.noMatches = true;
-
 	}
 
 console.log(
+	ejsOptions.cities,
 ejsOptions.cityExamples,
 ejsOptions.plantShopExamples,
-ejsOptions.emploeeExamples);
+ejsOptions.emploeeExamples
+);
 
 	res.render('index', ejsOptions);
 

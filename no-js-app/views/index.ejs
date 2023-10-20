@@ -13,17 +13,71 @@
 				<h1>Server-Side Rendering without browser's JS</h>
 			</div>
 		<div>
+			<div class="text">
+				<p>Выберите/введите значение в любое/любые поле/поля и отправьте форму.</p>
+			</div>
+		</div>
+		<div>
+			<div>
+				<form action="/no-js-app">
+					<div>
 
-		<% if(typeof noMatches === 'undefined') {%>
+						<%- 
+							
+							include('../partials/formInput', {
+								titleText: 'Город'
+								,listName: 'cities'
+								,formInputName: 'city' 
+								,dataListOptions: cities
+								,dataExamples: cityExamples
+							})
 
-			<%- include('../partials/noMatches')	%>
+						%>
 
-		<% } else { %>
+						<%- 
+							
+							include('../partials/formInput', {
+								titleText: 'Цех'
+								,listName: 'plantShops'
+								,formInputName: 'plantShop' 
+								,dataListOptions: plantShops
+								,dataExamples: plantShopExamples
+							})
 
-			<%- include('../partials/matches') %>
+						%>
 
-		<% } %>
+						<%- 
+							
+							include('../partials/formInput', {
+								titleText: 'Рабочий'
+								,listName: 'emploees'
+								,formInputName: 'emploee' 
+								,dataListOptions: emploees
+								,dataExamples: emploeeExamples
+							})
 
+						%>
+
+						<input type="submit" value="Отправить">
+					</div>
+				</form>
+			</div>
+
+			<div>
+				<h2>Output</h2>
+
+				<% if(typeof noMatches !== 'undefined') {%>
+
+					<%- include('../partials/noMatches')	%>
+
+				<% } else { %>
+
+					<%- include('../partials/matches') %>
+
+				<% } %>
+
+			</div>
+		</div>	
 	</body>
 </html>
 
