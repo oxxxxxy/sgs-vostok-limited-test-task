@@ -1,7 +1,6 @@
 <div class="formInputEl">
 	<div class="inputDiv">
-		<p><%= titleText %>.</p>
-		<input list="<%= listName %>" type="text" name="<%= formInputName %>">
+		<input list="<%= listName %>" type="text" name="<%= formInputName %>" placeholder="<%= titleText %>">
 		<datalist id="<%= listName %>">
 
 			<% dataListOptions.forEach( function(op) { %>

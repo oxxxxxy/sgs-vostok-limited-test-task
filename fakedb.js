@@ -37,16 +37,27 @@ const fakeTable = [
 
 
 const fakeFindRequest = function (queryObj) {
-	const doesRowMatchQuery = (row, queryObj) => {
-		const keys = Object.keys(queryObj);
+	const doesRowMatchQuery = (row, REQueryObj) => {
+		const keys = Object.keys(REQueryObj);
 
-		return keys.every(k => row[k] === queryObj[k])
+		return keys.every(k => 
+			Array.isArray(
+				row[k].match(REQueryObj[k])
+			)
+		)
 	};
 
 	if(u.isEmpty(queryObj)){
 		return this.table;
 	}	else {
-		let arr = this.table.filter(e => doesRowMatchQuery(e, queryObj));
+
+		const REQueryObj = structuredClone(queryObj);
+
+		Object.keys(REQueryObj).forEach(k => REQueryObj[k] = new RegExp(REQueryObj[k]));
+
+
+		let arr = this.table.filter(e => doesRowMatchQuery(e, REQueryObj));
+
 
 		if(!Array.isArray(arr)) {
 			arr = [];

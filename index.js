@@ -41,8 +41,7 @@ app.use(express.static(path.join(__dirname, "public")));
 //
 
 app.use('/no-js-app', noJsApp);
-
-//app.use('/vue-app', vueApp);
+app.use('/vue-app', vueApp);
 
 const indexPage = pug.compileFile('./index.pug')();
 app.get('/', (req, res) => {
@@ -50,7 +49,7 @@ app.get('/', (req, res) => {
 });
 
 app.use((req, res, next) => {
-  res.status(404).sendStatus(404);
+  res.sendStatus(404);
 })
 
 

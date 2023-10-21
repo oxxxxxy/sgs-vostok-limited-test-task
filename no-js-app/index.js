@@ -39,7 +39,6 @@ app.get('/', async (req, res) => {
 
 	const ejsOptions = {};
 
-	console.log(dbQuery, 'asd');
 
 	ejsOptions.cities = rows.filter(
 		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`city`)
