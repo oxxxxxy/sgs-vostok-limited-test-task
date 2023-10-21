@@ -39,6 +39,7 @@ app.get('/', async (req, res) => {
 
 	const ejsOptions = {};
 
+	console.log(dbQuery, 'asd');
 
 	ejsOptions.cities = rows.filter(
 		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`city`)
@@ -56,7 +57,7 @@ app.get('/', async (req, res) => {
 
 	ejsOptions.rows = [];
 
-	if(!u.isEmpty(dbQuery)){
+	if(!u.isEmpty(req.query)){
 		ejsOptions.rows = rows;
 	}
 
