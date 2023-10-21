@@ -119,6 +119,11 @@ input[type=submit] {
   padding: 0px 10px 0px 10px;
 }
 
+table, td, th, tr{
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
 table{
 	width: 100%;
   table-layout: auto;
@@ -126,10 +131,15 @@ table{
   padding-top: 10px;
 }
 
+table, tr:first-child{
+	border-bottom: 2px solid black;
+}
+
 td{
 	text-align: start;
 	padding:3px;
 }
+
 
 @media (max-width:750px){
 	.formInputLine {
