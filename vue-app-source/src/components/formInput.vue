@@ -19,7 +19,7 @@
 <template>
 	<div class="formInputEl">
 		<div class="inputDiv">
-			<input v-bindlist=" listName " type="text" v-bind:name=" formInputName " v-bind:placeholder=" titleText " v-bind:value=" inputValue ">
+			<input v-bind:list=" listName " type="text" v-bind:name=" formInputName " v-bind:placeholder=" titleText " v-bind:value=" inputValue ">
 			<datalist v-bind:id=" listName ">
 	
 				<option v-for=" op in datalistOptions " >{{ op }}</option>

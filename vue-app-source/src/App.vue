@@ -30,6 +30,7 @@
 					,emploee: ''
 				}
 				,noMatches: false
+				,dataLoaded: false
 			}
 		}
 		,methods: {
@@ -64,11 +65,15 @@
 				this.examples.cities =	json.cities;
 				this.examples.plantShops = json.plantShops;
 				this.examples.emploees = json.emploees;
+
 			}
 		}
 		,async mounted() {
 			await this.getExamples();
 
+			this.dataLoaded = true;
+
+			console.log(this);
 		}
 
 
@@ -119,6 +124,7 @@
 
 
 						<FormInput
+							v-if="dataLoaded"
 							titleText="Город"
 							listName="cities"
 							formInputName="city"
@@ -127,6 +133,15 @@
 							:inputValue="inputData.city"
 						/>
 
+						<FormInput
+							v-if="dataLoaded"
+							titleText="Цех"
+							listName="plantShops"
+							formInputName="plantShop"
+							:datalistOptions="dataLists.plantShops"
+							:dataExamples="examples.plantShops"
+							:inputValue="inputData.plantShop"
+						/>
 
 						<!--
 						<%- 
