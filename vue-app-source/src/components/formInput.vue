@@ -9,8 +9,6 @@
 			,dataExamples: Array
 			,inputValue: String
 		}
-
-
 	}
 
 </script>

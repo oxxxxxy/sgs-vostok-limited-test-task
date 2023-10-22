@@ -1,3 +1,13 @@
+<script>
+
+	export default {
+		props: {
+			tableList: Array
+		}
+	}
+
+</script>
+
 <template>
 	<table>
 	  <tr style="border-bottom: 2px solid black;">
@@ -8,20 +18,15 @@
 	    <th>Начало смены</th>
 	    <th>Конец смены</th>
 	  </tr>
-	
-		<!--
-		<% rows.forEach(function(e){ %>
-	
-		  <tr>
-		    <td><%= e.city %></td>
-		    <td><%= e.plantShop %></td>
-		    <td><%= e.emploee %></td>
-		    <td><%= e.brigade %></td>
-		    <td><%= e.workFrom %></td>
-		    <td><%= e.workUntil %></td>
-		  </tr>
-	
-		<% }); %>
-		-->
+
+		<tr v-for=" item in tableList ">
+		    <td>{{ item.city }}</td>
+		    <td>{{ item.plantShop }}</td>
+		    <td>{{ item.emploee }}</td>
+		    <td>{{ item.brigade }}</td>
+		    <td>{{ item.workFrom }}</td>
+		    <td>{{ item.workUntil }}</td>
+		</tr>
+
 	</table>
 </template> 
