@@ -2,17 +2,27 @@
 
 	import NoMatches from './components/noMatches.vue';
 	import Matches from './components/matches.vue';
+	import FormInput from './components/formInput.vue';
 
 
 	export default {
 		components:{
 			NoMatches
 			,Matches
+			,FormInput
 		}
 		,data() {
 			return {
-				examples: {}
-				,dataLists: {}
+				examples: {
+					cities: []
+					,plantShops: []
+					,emploees: []
+				}
+				,dataLists: {
+					cities: []
+					,plantShops: []
+					,emploees: []
+				}
 				,tableList: []
 				,inputData: {
 					city: ''
@@ -47,16 +57,18 @@
 				const res = await fetch('/api/examples');
 				const json = await res.json();
 
-				this.examples = {
-					json.cities
-					,json.plantShops
-					,json.emploees
-				};
+				this.dataLists.cities =	json.cities;
+				this.dataLists.plantShops = json.plantShops;
+				this.dataLists.emploees = json.emploees;
+
+				this.examples.cities =	json.cities;
+				this.examples.plantShops = json.plantShops;
+				this.examples.emploees = json.emploees;
 			}
 		}
 		,async mounted() {
 			await this.getExamples();
-			console.log(this);
+
 		}
 
 
@@ -82,7 +94,38 @@
 				<form>
 					<div class="formInputLine">
 
+						<!--
 
+			listName: String
+			,formInputName: String
+			,placeholder: 
+			,datalistOptions: Array
+			,dataExamples: Array
+			,inputValue: String
+
+				examples 
+				,dataLists: {}
+				,tableList: []
+				,inputData: {
+					city: ''
+					,plantShop: ''
+					,emploee: ''
+				}
+
+				this.dataLists.cities =	json.cities;
+				this.dataLists.plantShops = json.plantShops;
+				this.dataLists.emploees = json.emploees;
+						-->
+
+
+						<FormInput
+							titleText="Город"
+							listName="cities"
+							formInputName="city"
+							:datalistOptions="dataLists.cities"
+							:dataExamples="examples.cities"
+							:inputValue="inputData.city"
+						/>
 
 
 						<!--
