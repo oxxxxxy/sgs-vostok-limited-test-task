@@ -8,19 +8,8 @@ import u from '../utils.js';
 
 
 
-const allowedQueryParameters = [
-	'city'
-	,'plantShop'
-	,'workFrom'
-	,'workUntil'
-	,'brigade'
-	,'emploee'
-];
-
-
-
 /*
- * Global DB
+ * Global APP
  */
 
 
@@ -33,9 +22,9 @@ app.set("view engine", "ejs");
 
 app.get('/', async (req, res) => {
 
-	const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, allowedQueryParameters);
+	const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
 
-	const rows = await DB.query(dbQuery);
+	const rows = await APP.DB.query(dbQuery);
 
 	const ejsOptions = {};
 

@@ -7,14 +7,22 @@ import express from 'express';
 import helmet from "helmet";
 import compression from 'compression';
 import pug from 'pug';
+import bodyParser from 'body-parser';
 
 import noJsApp from './no-js-app/index.js';
 import vueApp from './vue-app/index.js';
 import fakeDB from './fakedb.js';
+import config from './config.js';
+
 
 // для упрощения себе задачи я буду использовать global scope
-// и подобие базы данных
-global.DB = fakeDB;
+
+const APP = {
+	DB: fakeDB
+	,config: config
+};
+
+global.APP = APP;
 
 
 const app = express();
@@ -35,6 +43,9 @@ app.use(helmet());
 
 app.use(express.static(path.join(__dirname, "public")));
 
+
+app.use(bodyParser.urlencoded({parameterLimit:10}));
+app.use(bodyParser.json());
 
 //
 // app
