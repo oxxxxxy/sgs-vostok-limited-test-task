@@ -1,6 +1,7 @@
-Честно говоря, подумал, что нет смысла ещё одну репу делать. Не знаю, спишите на лоу опыт.
+# Vue 3 + Vite
 
-Честно, не знаю, как правильно организовать проект под деплой с вью. ХМхмхмхмх...
+This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-upd
-[OTDAY OPIT SYUDA MNE DA](https://memepedia.ru/wp-content/uploads/2019/11/weu5j4khf3o.jpg)
+## Recommended IDE Setup
+
+- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).

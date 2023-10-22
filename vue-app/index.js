@@ -16,9 +16,7 @@ import u from '../utils.js';
 
 const app = express();
 
-
-
-app.use(express.static(path.join(__dirname, './build')));
+app.use('/assets', express.static(path.join(__dirname, 'build', 'assets')));
 
 
 app.get('/api/examples', async (req, res) => {
@@ -46,6 +44,8 @@ app.get('/api/examples', async (req, res) => {
 
 app.get('/api/search', async (req, res) => {
 
+	console.log(req.query)
+
 	const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
 
 	const rows = await APP.DB.query(dbQuery);
@@ -72,7 +72,7 @@ app.get('/api/search', async (req, res) => {
 
 
 app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, './build/index.html'));
+	res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 
