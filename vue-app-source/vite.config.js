@@ -7,6 +7,17 @@ export default defineConfig({
   ,build:{
 		outDir:'../vue-app/build'
 	}
+	,server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3000/vue-app',
+          changeOrigin: true
+        }
+				,'/style.css':{
+          target: 'http://localhost:3000/',
+          changeOrigin: true
+				}
 
-
+      }
+    }
 })

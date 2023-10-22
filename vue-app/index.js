@@ -44,8 +44,6 @@ app.get('/api/examples', async (req, res) => {
 
 app.get('/api/search', async (req, res) => {
 
-	console.log(req.query)
-
 	const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
 
 	const rows = await APP.DB.query(dbQuery);
