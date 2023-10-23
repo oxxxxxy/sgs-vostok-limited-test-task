@@ -9,8 +9,8 @@ export default defineConfig({
 	}
 	,server: {
       proxy: {
-        '/api': {
-          target: 'http://localhost:3000/vue-app',
+        '/vue-app/api': {
+          target: 'http://localhost:3000/',
           changeOrigin: true
         }
 				,'/style.css':{

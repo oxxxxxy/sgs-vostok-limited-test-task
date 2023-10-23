@@ -36,7 +36,7 @@
 		,methods: {
 			async search(e) {
 
-				const res = await fetch('/api/search?' + new URLSearchParams(this.inputData));
+				const res = await fetch('/vue-app/api/search?' + new URLSearchParams(this.inputData));
 				const json = await res.json();
 
 
@@ -54,7 +54,7 @@
 			}
 			,async getExamples() {
 
-				const res = await fetch('/api/examples');
+				const res = await fetch('/vue-app/api/examples');
 				const json = await res.json();
 
 				this.dataLists.cities =	json.cities;
