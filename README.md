@@ -17,6 +17,10 @@
 
 1. вью-эпп и всё-всё-всё для этого
     - сохранка в куку, но скорее в локал сторадж, idk
+        - cookie token http
+        - localStorage for passed data from user
+        - encryption localStorageData by open-key accessed via fetch
+        - decryption recieved data from clint by private-key
 1. написать скрипт таблицы MS SQL
 1. деплой
 1. уведомить рекрутера

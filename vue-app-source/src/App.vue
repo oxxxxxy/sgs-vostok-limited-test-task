@@ -5,6 +5,10 @@
 	import FormInput from './components/formInput.vue';
 
 
+	const inputDateNames = ['city', 'plantShop', 'emploee'];
+
+	const makeInputDataNameForLocStor = name => 'inputData-' + name;
+
 	export default {
 		components:{
 			NoMatches
@@ -36,8 +40,27 @@
 		,methods: {
 			async search(e) {
 
-				const res = await fetch('/vue-app/api/search?' + new URLSearchParams(this.inputData));
-				const json = await res.json();
+				const urlSearchParamsString = new URLSearchParams(this.inputData);
+
+				const previousData = window.localStorage.getItem(urlSearchParamsString);
+
+				let json;
+
+				if(previousData === null){
+				
+					const res = await fetch('/vue-app/api/search?' + urlSearchParamsString);
+					json = await res.json();
+
+					window.localStorage.setItem(
+						urlSearchParamsString
+						,JSON.stringify(json)
+					);
+
+				} else {
+
+					json = JSON.parse(previousData);
+
+				}
 
 
 				if(!json.rows.length){
@@ -70,10 +93,58 @@
 
 				this.inputData[name] = value;
 
+				window.localStorage.setItem(
+					makeInputDataNameForLocStor(name)
+					,value
+				);
+
 			}
+			,checkExpirationAndClear() {
+
+				const previousDate = window.localStorage.getItem('date');
+			
+				if(previousDate === null){
+
+					window.localStorage.setItem('date', JSON.stringify(Date.now()));
+
+				} else {
+
+					const now = Date.now();
+					const previousNow = JSON.parse(previousDate);
+					
+					const diff = now - previousNow;
+					
+					if(diff  >  24 * 60 * 60 * 1000){ // if more than 1 day
+
+						window.localStorage.clear();
+
+					}
+				}
+			}
+			,loadPreviousInputData() {
+				
+				inputDateNames.forEach(e => {
+
+					const previousInputData = window.localStorage.getItem(
+						makeInputDataNameForLocStor(e)
+					);
+
+					if(previousInputData !== null){
+						this.inputData[e] = previousInputData;
+					}
+
+				});
+
+			}
+
 		}
 		,async mounted() {
+
 			await this.getExamples();
+
+			this.checkExpirationAndClear();
+			this.loadPreviousInputData();
+
 
 			this.dataLoaded = true;
 
