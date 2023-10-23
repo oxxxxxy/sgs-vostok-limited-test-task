@@ -40,11 +40,17 @@ const fakeFindRequest = function (queryObj) {
 	const doesRowMatchQuery = (row, REQueryObj) => {
 		const keys = Object.keys(REQueryObj);
 
-		return keys.every(k => 
-			Array.isArray(
-				row[k].match(REQueryObj[k])
-			)
-		)
+		return keys.every(k => {
+
+			if( typeof row[k] === 'string'){
+				return Array.isArray(
+					row[k].match(REQueryObj[k])
+				)
+			}else{
+				row[k] === REQueryObj[k];
+			}
+
+		});
 	};
 
 	if(u.isEmpty(queryObj)){
