@@ -35,9 +35,6 @@
 		}
 		,methods: {
 			async search(e) {
-				e.preventDefault();
-
-				console.log(e);
 
 				const res = await fetch('/api/search?' + new URLSearchParams(this.inputData));
 				const json = await res.json();
@@ -69,16 +66,18 @@
 				this.examples.emploees = json.emploees;
 
 			}
+			,setInputData({value, name}) {
+
+				this.inputData[name] = value;
+
+			}
 		}
 		,async mounted() {
 			await this.getExamples();
 
 			this.dataLoaded = true;
 
-			console.log(this);
 		}
-
-
 
 	};
 
@@ -97,10 +96,11 @@
 			</div>
 		<div>
 			<div>
-				<form>
+				<form @submit.prevent="search">
 					<div class="formInputLine">
 
 						<FormInput
+							@keyup="setInputData"
 							titleText="Город"
 							listName="cities"
 							formInputName="city"
@@ -110,6 +110,7 @@
 						/>
 
 						<FormInput
+							@keyup="setInputData"
 							titleText="Цех"
 							listName="plantShops"
 							formInputName="plantShop"
@@ -119,6 +120,7 @@
 						/>
 
 						<FormInput
+							@keyup="setInputData"
 							titleText="Сотрудник"
 							listName="emploees"
 							formInputName="emploee"
@@ -129,7 +131,7 @@
 
 					</div>
  					<div>
-						<input type="submit" value="Отправить" @click="search">
+						<input type="submit" value="Отправить" >
 					</div>
 				</form>
 			</div>
