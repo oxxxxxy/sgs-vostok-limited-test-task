@@ -19,8 +19,7 @@
     - сохранка в куку, но скорее в локал сторадж, idk
         - cookie token http
         - localStorage for passed data from user
-        - encryption localStorageData by open-key accessed via fetch
-        - decryption recieved data from clint by private-key
+1. сделать сортировку по расписанию бригады
 1. написать скрипт таблицы MS SQL
 1. деплой
 1. уведомить рекрутера
@@ -35,6 +34,7 @@
 1. написать страницу
 1. поиграться с билдом
 1. засунуть билд на сервер
+1. сохранка в локал сторадж
 
 
 # П.С.
