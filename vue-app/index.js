@@ -36,9 +36,11 @@ app.get('/api/examples', async (req, res) => {
 
 
 	res.json({
-		cities
-		,plantShops
-		,emploees
+		dataLists: {
+			cities
+			,plantShops
+			,emploees
+		}
 	});
 });
 
@@ -61,9 +63,11 @@ app.get('/api/search', async (req, res) => {
 
 
 	res.json({
-		cities
-		,plantShops
-		,emploees
+		dataLists: {
+			cities
+			,plantShops
+			,emploees
+		}
 		,rows
 	});
 });

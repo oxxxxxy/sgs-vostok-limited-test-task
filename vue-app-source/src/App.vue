@@ -69,9 +69,8 @@
 					this.noMatches = false;
 				}
 
-				this.dataLists.cities =	json.cities;
-				this.dataLists.plantShops = json.plantShops;
-				this.dataLists.emploees = json.emploees;
+				
+				this.dataLists = json.dataLists;
 
 				this.tableList = json.rows;
 			}
@@ -80,13 +79,9 @@
 				const res = await fetch('/vue-app/api/examples');
 				const json = await res.json();
 
-				this.dataLists.cities =	json.cities;
-				this.dataLists.plantShops = json.plantShops;
-				this.dataLists.emploees = json.emploees;
+				this.dataLists = json.dataLists;
 
-				this.examples.cities =	json.cities;
-				this.examples.plantShops = json.plantShops;
-				this.examples.emploees = json.emploees;
+				this.examples = json.dataLists;
 
 			}
 			,setInputData({value, name}) {
