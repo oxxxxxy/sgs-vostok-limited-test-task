@@ -42,6 +42,10 @@ const sanitizeQueryParamObjValues = queryObj =>
 	);
 
 const parseWorkSchelude = queryObj => {
+	if(!queryObj.workSchelude){
+		return queryObj;
+	}
+
 	let [workFrom, workUntil] = queryObj.workSchelude.split('-');
 	delete queryObj.workSchelude;
 
@@ -80,8 +84,11 @@ const getFnFilterObjsByPropValueAndGetArrOfPropValues = prop =>
 
 export default {
 	isEmpty
+	,pipeTwo
+	,pipeLine
 	,getQueryParamObjFromReqQuery
 	,sanitizeQueryParamObjValues
+	,parseWorkSchelude
 	,makeDBQueryFromReqParamQuery
 	,compareTwoObjPropValues
 	,getFnFilterObjsByPropValueAndGetArrOfPropValues

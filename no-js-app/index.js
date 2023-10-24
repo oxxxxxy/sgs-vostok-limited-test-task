@@ -24,6 +24,7 @@ app.get('/', async (req, res) => {
 
 	const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
 
+
 	const rows = await APP.DB.query(dbQuery);
 
 	const ejsOptions = {};
