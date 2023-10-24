@@ -71,7 +71,6 @@ p{
 	margin:10px;
 	border: 2px solid black;
   padding: 10px;
-  height: 228px;
 }
 
 input[type=text]{
@@ -96,6 +95,22 @@ input[type=submit] {
   width: 228px;
   height: 43px;
   margin: 10px;
+}
+
+select{
+	border: none;
+	outline: none;
+	border-bottom: 2px solid black;
+	background: grey;
+	border-radius: 2px 2px 0 0;
+	padding: 2px;
+	color: white;
+	font-size: 18px;
+  width: 110px;
+}
+
+.marginLeftRight{
+	margin:0px 10px 0px 10px
 }
 
 .dataExample{

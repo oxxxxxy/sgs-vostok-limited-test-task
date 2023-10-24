@@ -58,6 +58,26 @@
 
 						%>
 					</div>
+					<div>
+						<div class="formInputEl">
+							<div class="formInputLine">
+								<div>
+									<p>График рабочего дня</p>
+								</div>
+								<div class="marginLeftRight">
+									<select name="workSchelude">
+										
+									<%	workSchelude.forEach( function(e) { %>
+
+										<option value="<%= e.from %>-<%= e.until %>">С <%= e.from %> До <%= e.until %></option>
+								
+									<% }); %>
+
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
  					<div>
 						<input type="submit" value="Отправить">
 					</div>

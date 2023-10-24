@@ -1,8 +1,7 @@
 const allowedQueryParameters = [
 	'city'
 	,'plantShop'
-	,'workFrom'
-	,'workUntil'
+	,'workSchelude'
 	,'brigade'
 	,'emploee'
 ];

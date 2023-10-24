@@ -43,6 +43,24 @@ app.get('/', async (req, res) => {
 	ejsOptions.emploeeExamples = ejsOptions.emploees.slice(0, 5);
 
 
+	const workFrom = rows.filter(
+		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`workFrom`)
+	).map(e => e.workFrom);
+
+	const workUntil = rows.filter(
+		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`workUntil`)
+	).map(e => e.workUntil);
+
+	ejsOptions.workSchelude = workFrom.map((e, i) => 
+		(
+			{
+				from: e
+				,until: workUntil[i]
+			}
+		)
+	);
+
+
 	ejsOptions.rows = [];
 
 	if(!u.isEmpty(req.query)){
