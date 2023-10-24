@@ -140,8 +140,6 @@
 
 				});
 
-				console.log(this);
-
 			}
 
 		}
