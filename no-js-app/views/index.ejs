@@ -65,8 +65,9 @@
 									<p>График рабочего дня</p>
 								</div>
 								<div class="marginLeftRight">
-									<select name="workSchelude">
-										
+									<select name="workSchelude">	
+										<option value="">Пусто</option>
+
 									<%	workSchelude.forEach( function(e) { %>
 
 										<option value="<%= e.from %>-<%= e.until %>">С <%= e.from %> До <%= e.until %></option>
