@@ -3,7 +3,8 @@
 
 	export default {
 		props: {
-			workSchelude: Array
+			workScheludeOptions: Array
+			,workScheludeSelected: String
 		}
 		,emits: ['change']
 		,methods: {
@@ -29,9 +30,11 @@
 				</div>
 				<div class="marginLeftRight">
 					<select name="workSchelude" @change="selectOption">	
-						<option v-bind:value="''">Пусто</option>
 
-						<option v-for=" e in workSchelude " v-bind:value="`${e.from }-${e.until}`">С {{ e.from }} До {{ e.until }}</option>
+						<option v-if="!workScheludeSelected" v-bind:value="''">Пусто</option>
+						<option v-else v-bind:value="workScheludeSelected">{{ `С ${workScheludeSelected.split('-')[0]} До ${workScheludeSelected.split('-')[1]}` }}</option>
+
+						<option v-for=" e in workScheludeOptions " v-bind:value="`${e.from }-${e.until}`" >С {{ e.from }} До {{ e.until }}</option>
 
 					</select>
 				</div>

@@ -29,14 +29,14 @@
 					cities: []
 					,plantShops: []
 					,emploees: []
-					,workSchelude: []
+					,workSchelude: {}
 				}
 				,tableList: []
 				,initData: {
 					cities: []
 					,plantShops: []
 					,emploees: []
-					,workSchelude: []
+					,workSchelude: {}
 				}
 				,noMatches: false
 				,dataLoaded: false
@@ -77,6 +77,10 @@
 				
 				this.dataLists = json.dataLists;
 
+				this.dataLists.workSchelude = {
+					options: json.dataLists.workSchelude
+				};
+
 				this.tableList = json.rows;
 			}
 			,async getInitData() {
@@ -85,8 +89,9 @@
 				const json = await res.json();
 
 				this.initData = json.dataLists;
-
-				delete this.initData.rows;
+				this.initData.workSchelude = {
+					options: json.dataLists.workSchelude
+				};
 
 			}
 			,setInputData({value, name}) {
@@ -134,6 +139,8 @@
 					}
 
 				});
+
+				console.log(this);
 
 			}
 
@@ -202,13 +209,25 @@
 
 					</div>
 					
-					<WorkSchelude v-if="dataLists.workSchelude.length"
+
+					<!-- if we loading from dataLists  -->
+					<WorkSchelude v-if="dataLists.workSchelude.options && dataLists.workSchelude.options.length"
 						@change="setInputData"
-						:workSchelude="dataLists.workSchelude"
+						:workScheludeOptions="dataLists.workSchelude.options"
+						:workScheludeSelected="inputData.workSchelude"
 					/>
+					
+					<!-- else if we loading from localStorage -->
+					<WorkSchelude v-else-if="inputData.workSchelude"
+						@change="setInputData"
+						:workScheludeOptions="initData.workSchelude.options"
+						:workScheludeSelected="inputData.workSchelude"
+					/>
+
+					<!-- else we loading from initData  -->
 					<WorkSchelude v-else
 						@change="setInputData"
-						:workSchelude="initData.workSchelude"
+						:workScheludeOptions="initData.workSchelude.options"
 					/>
 
 
