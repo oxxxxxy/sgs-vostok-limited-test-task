@@ -3,9 +3,10 @@
 	import NoMatches from './components/noMatches.vue';
 	import Matches from './components/matches.vue';
 	import FormInput from './components/formInput.vue';
+	import WorkSchelude from './components/workSchelude.vue';
 
 
-	const inputDateNames = ['city', 'plantShop', 'emploee'];
+	const inputDataNames = ['city', 'plantShop', 'emploee', 'workSchelude'];
 
 	const makeInputDataNameForLocStor = name => 'inputData-' + name;
 
@@ -14,24 +15,28 @@
 			NoMatches
 			,Matches
 			,FormInput
+			,WorkSchelude
 		}
 		,data() {
 			return {
-				examples: {
-					cities: []
-					,plantShops: []
-					,emploees: []
+				inputData: {
+					cities: ''
+					,plantShops: ''
+					,emploees: ''
+					,workSchelude: ''
 				}
 				,dataLists: {
 					cities: []
 					,plantShops: []
 					,emploees: []
+					,workSchelude: []
 				}
 				,tableList: []
-				,inputData: {
-					city: ''
-					,plantShop: ''
-					,emploee: ''
+				,initData: {
+					cities: []
+					,plantShops: []
+					,emploees: []
+					,workSchelude: []
 				}
 				,noMatches: false
 				,dataLoaded: false
@@ -74,14 +79,14 @@
 
 				this.tableList = json.rows;
 			}
-			,async getExamples() {
+			,async getInitData() {
 
-				const res = await fetch('/vue-app/api/examples');
+				const res = await fetch('/vue-app/api/search');
 				const json = await res.json();
 
-				this.dataLists = json.dataLists;
+				this.initData = json.dataLists;
 
-				this.examples = json.dataLists;
+				delete this.initData.rows;
 
 			}
 			,setInputData({value, name}) {
@@ -118,7 +123,7 @@
 			}
 			,loadPreviousInputData() {
 				
-				inputDateNames.forEach(e => {
+				inputDataNames.forEach(e => {
 
 					const previousInputData = window.localStorage.getItem(
 						makeInputDataNameForLocStor(e)
@@ -135,7 +140,7 @@
 		}
 		,async mounted() {
 
-			await this.getExamples();
+			await this.getInitData();
 
 			this.checkExpirationAndClear();
 			this.loadPreviousInputData();
@@ -171,7 +176,7 @@
 							listName="cities"
 							formInputName="city"
 							:datalistOptions="dataLists.cities"
-							:dataExamples="examples.cities"
+							:initDataList="initData.cities"
 							:inputValue="inputData.city"
 						/>
 
@@ -181,7 +186,7 @@
 							listName="plantShops"
 							formInputName="plantShop"
 							:datalistOptions="dataLists.plantShops"
-							:dataExamples="examples.plantShops"
+							:initDataList="initData.plantShops"
 							:inputValue="inputData.plantShop"
 						/>
 
@@ -191,11 +196,22 @@
 							listName="emploees"
 							formInputName="emploee"
 							:datalistOptions="dataLists.emploees"
-							:dataExamples="examples.emploees"
+							:initDataList="initData.emploees"
 							:inputValue="inputData.emploee"
 						/>
 
 					</div>
+					
+					<WorkSchelude v-if="dataLists.workSchelude.length"
+						@change="setInputData"
+						:workSchelude="dataLists.workSchelude"
+					/>
+					<WorkSchelude v-else
+						@change="setInputData"
+						:workSchelude="initData.workSchelude"
+					/>
+
+
  					<div>
 						<input type="submit" value="Отправить" >
 					</div>

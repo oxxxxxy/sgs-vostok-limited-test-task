@@ -6,7 +6,7 @@
 			,formInputName: String
 			,titleText: String
 			,datalistOptions: Array
-			,dataExamples: Array
+			,initDataList: Array
 			,inputValue: String
 		}
 		,emits: ['keyup']
@@ -41,7 +41,7 @@
 				<div class="text">
 					<ul>
 	
-						<li v-for=" item in dataExamples "><p>{{ item }}</p></li>
+						<li v-for=" item in initDataList "><p>{{ item }}</p></li>
 	
 					</ul>
 				</div>

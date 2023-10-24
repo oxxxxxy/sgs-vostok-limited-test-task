@@ -39,7 +39,7 @@ const fakeTable = [
 const fakeFindRequest = function (queryObj) {
 	const doesRowMatchQuery = (row, REQueryObj) => {
 		const keys = Object.keys(REQueryObj);
-console.log(row, REQueryObj)
+
 		return keys.every(k => {
 
 			if( typeof row[k] === 'string'){
