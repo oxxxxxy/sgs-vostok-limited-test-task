@@ -41,3 +41,21 @@
 Начал в 15:00 примерно 18 октября 2023.
 
 ППц. в 13:49 24 октября 2023 уведомили, что время вышло... Отправлено на рассмотрение.
+
+# ПСПС
+
+ВОЗЬМИТЕ МЕНЯ НА РАБОТУ
+GIVE ME THAT JOB
+LLÉVAME A ESE TRABAJO
+PORTAMI A QUEL LAVORO
+МЕНІ ОСЫ ЖҰМЫСҚА АПАРЫҢЫЗ
+BRING MICH ZU DIESER ARBEIT
+EMMÈNE-MOI À CE TRAVAIL
+带我去那份工作
+წამიყვანე იმ საქმეში
+ZABIERZ MNIE DO TEJ PRACY
+ВІЗЬМИ МЕНЕ НА ЦЮ РОБОТУ
+그 일에 나를 데려가
+
+spasiba za vnimanie
+

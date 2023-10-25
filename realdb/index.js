@@ -11,6 +11,7 @@ import knex from 'knex';
 const KnexSessionStore = (await import('connect-session-knex')).default(expressSession);
 
 
+
 /*
  *	Global APP
  */
@@ -24,7 +25,7 @@ const KnexSessionStore = (await import('connect-session-knex')).default(expressS
 
 
 const store = new KnexSessionStore({
-	knex: APP.knex
+	knex: APP.knexDB
 });
 
 

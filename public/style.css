@@ -168,3 +168,40 @@ td{
 	}
 
 }
+
+
+.rofl{
+	min-width:700px;
+  height: 50px;
+}
+
+.workReq{
+  height: 50px;
+  width:100%;
+  display:flex;
+  position: absolute;
+  overflow:hidden;
+  box-sizing: border-box;
+}
+
+.workReqList{
+  display:flex;
+  flex-direction:column;
+  -webkit-animation: loop 2s infinite linear;
+  animation: loop 2s infinite linear;
+}
+
+.workReqListItem{
+  font-size: 30px;
+  line-height: 30px;
+  box-sizing: border-box;
+}
+
+
+@keyframes loop {
+  100% {
+    -webkit-transform: translateY(-100%);
+    transform: translateY(-100%);
+  }
+}
+
