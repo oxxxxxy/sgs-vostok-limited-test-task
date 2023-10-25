@@ -16,7 +16,7 @@ import u from '../utils.js';
 
 const app = express();
 
-app.use('/assets', express.static(path.join(__dirname, 'build', 'assets')));
+app.use('/assets', express.static('./build/assets'));
 
 
 app.get('/api/search', async (req, res) => {
@@ -66,7 +66,7 @@ app.get('/api/search', async (req, res) => {
 
 
 app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, 'build', 'index.html'));
+	res.sendFile('./build/index.html'));
 });
 
 
