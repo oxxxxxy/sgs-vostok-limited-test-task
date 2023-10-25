@@ -66,7 +66,7 @@ app.get('/api/search', async (req, res) => {
 
 
 app.get('/', (req, res) => {
-	res.sendFile('./build/index.html'));
+	res.sendFile('./build/index.html');
 });
 
 
