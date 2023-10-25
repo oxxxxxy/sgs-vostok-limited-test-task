@@ -3,7 +3,34 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-console.log(__dirname)
+
+import { readdir } from 'node:fs/promises';
+
+try {
+
+console.log(
+	await readdir(
+		path.join(__dirname, 'vue-app')
+	)
+);
+
+
+}catch(e){
+	console.log(e)
+}
+
+try {
+
+console.log(
+	await readdir(
+		path.join(__dirname, 'vue-app', 'build')
+	)
+);
+
+}catch(e){
+	console.log(e)
+}
+
 
 import express from 'express';
 import helmet from "helmet";
