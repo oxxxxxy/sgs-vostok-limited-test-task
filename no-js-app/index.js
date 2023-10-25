@@ -6,7 +6,6 @@ import express from 'express';
 
 import u from '../utils.js';
 
-console.log(__dirname)
 
 
 /*

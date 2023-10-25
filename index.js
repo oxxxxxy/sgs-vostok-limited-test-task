@@ -4,33 +4,6 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
-import { readdir } from 'node:fs/promises';
-
-try {
-
-console.log(
-	await readdir(
-		path.join(__dirname, 'vue-app')
-	)
-);
-
-
-}catch(e){
-	console.log(e)
-}
-
-try {
-
-console.log(
-	await readdir(
-		path.join(__dirname, 'vue-app', 'build')
-	)
-);
-
-}catch(e){
-	console.log(e)
-}
-
 
 import express from 'express';
 import helmet from "helmet";
@@ -83,7 +56,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 /*
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'dev-deploy') {
 	// httpOnly or idk
 	// trust proxy etc
 	//
