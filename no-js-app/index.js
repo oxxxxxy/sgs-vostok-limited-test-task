@@ -33,7 +33,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", "ejs");
 
 
-app.get('/', async (req, res, next) => {
+app.get('/', async (req, res) => {
+
+	try {
+		await APP.knex('user_get_requests').insert({uid: req.session.uid, path: req.originalUrl});
+	} catch (e) {
+		console.error(e);
+	}
 
 	// console.log(req, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', res)
 

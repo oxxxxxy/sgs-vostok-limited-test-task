@@ -1,7 +1,7 @@
 
 CREATE TABLE IF NOT EXISTS users(
 	id INTEGER PRIMARY KEY AUTOINCREMENT
-	,last_req_date TEXT
+	,access_date TEXT
 );
 
 CREATE TABLE IF NOT EXISTS user_get_requests(

@@ -62,6 +62,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const cookie = {
 	sameSite: true
+	,maxAge: 60 * 60 * 1000
 };
 
 if (process.env.NODE_ENV === 'dev-deploy') {
@@ -87,53 +88,79 @@ app.use(expressSession({
 // because express-session aims to handle authed sessions
 // and must refresh sessionID token for security reason
 // but i havenot enough experience and want to finish that task as fast as i can
-// to demonstrate my desire to become developer
+// to demonstrate my desire to become developer and get more experience as possible
+// if i have enough time i will recode this solution to a more right one
 //
 // and i read some papers about designing http cookie
 // and it say that, storing user data right in the cookie is a bad solution
 // and i agree with that
 // because cookie must store only nessary data about auth
 // and can't be accepted via client-side JS
-// so if it important to cache some temporary user data such as list of goods
+// so if it important to store or cache some temporary user data such as list of goods
 // then devs must use localStorage( as me at vue app ) or any other client-side DB-things
 // or database on the server-side
 
 
 //	session handler
 
-app.use((q, s, n) => {
-	// console.log(q, '\nAAAAAAAAAAAAAAABETWEEN REQ AND RESAAAAAAAAAAAA\n', s);
-	//
-	
-	// user first time visit
-	// insert his date inside  table users
-	// get uid
-	// insert request in   table user_requests
-	//	set uid to session
+app.use(async (req, res, next) => {
 
+	if(!req.session.uid){
+		// user first time visit
+		// insert his date inside  table users
+		// get uid
+		// insert request at every path in   table user_requests
+		//	set uid to session
+
+		const access_date = (new Date()).toISOString();
+
+		try {
+			const res = await APP.knex('users').returning('id').insert({access_date});
+
+			req.session.uid = res[0].id;
+		} catch(e) {
+			console.error(e);
+		}
+	
+	}
 	//	user next time visit
 	//	get uid from session
-	//	update his last_req_date
 	//	insert request in   table user_requests
-	//
 
-	//
-	//
-	//
-	// set uid for new user add get from session store
-	//
-	// delete user and his actions after 1h
-	//
 
-	if(!q.session.uid){
-		console.log('no uid')
-		q.session.uid = 1;
-	} else{
-		console.log('has uid', q.session.uid)
-	}
-
-	n();
+	next();
 });
+
+// db sanitizer of user and his reqs after expired time
+
+// fn setInterval(() => {})
+// search users limit 50
+// search each user in session
+//		if session has not this user delete all his data
+//
+
+const delay = ms => new Promise(r => setTimeout(r,  ms));
+
+const dbSanitizer = async () => {
+
+	const limit = 50;
+	let offset = 0;
+
+	while(true) {
+
+
+//		if( no data match){
+
+//			offset = 0;
+
+//		}
+
+		await delay();
+	}
+}
+
+// dbSanitizer();
+
 
 
 //
@@ -144,7 +171,14 @@ app.use('/no-js-app', noJsApp);
 app.use('/vue-app', vueApp);
 
 const indexPage = pug.compileFile('./index.pug')();
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+	
+	try {
+		await APP.knex('user_get_requests').insert({uid: req.session.uid, path: req.originalUrl});
+	} catch (e) {
+		console.error(e);
+	}
+
 	res.send(indexPage);
 });
 
