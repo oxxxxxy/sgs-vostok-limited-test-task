@@ -1,3 +1,4 @@
+
 const allowedQueryParameters = [
 	'city'
 	,'plantShop'
@@ -5,6 +6,8 @@ const allowedQueryParameters = [
 	,'brigade'
 	,'emploee'
 ];
+
+
 
 export default {
 	allowedQueryParameters

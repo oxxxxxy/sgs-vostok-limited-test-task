@@ -4,37 +4,31 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
-
 import express from 'express';
 import helmet from "helmet";
 import compression from 'compression';
 import pug from 'pug';
-import bodyParser from 'body-parser';
 import expressSession from 'express-session';
 
 
 (await import('dotenv')).config();
+const KnexSessionStore = (await import('connect-session-knex')).default(expressSession);
 
 
 import noJsApp from './no-js-app/index.js';
 import vueApp from './vue-app/index.js';
-import fakeDB from './fakedb.js';
-import config from './config.js';
-//import db generate file if not exists, connect and etc
-//import store from './realdb/index.js';
 
 
+//
+// for simplicity, i am going to use GLOBAL
+//
+
+global.APP = (await import('./load-global-app.js')).default;
 
 
-// для упрощения себе задачи я буду использовать global scope
-
-const APP = {
-	DB: fakeDB
-	,config: config
-};
-
-global.APP = APP;
-
+//
+// The beggining of the whole application
+//
 
 const app = express();
 
@@ -54,7 +48,7 @@ app.use(helmet());
 
 app.use(express.static(path.join(__dirname, "public")));
 
-/*
+
 
 if (process.env.NODE_ENV === 'dev-deploy') {
 	// httpOnly or idk
@@ -63,12 +57,15 @@ if (process.env.NODE_ENV === 'dev-deploy') {
 
 }
 
-
 app.use(expressSession({
 	secret: process.env.SESSION_SECRET
 	,resave: false
 	,saveUninitialized: false
-	,store
+	,store: new KnexSessionStore({
+		knex: APP.knex
+		,useNullAsDefault: false
+
+	})
 }));
 
 
@@ -76,12 +73,9 @@ app.use((q, s, n) => {
 	console.log(q.session);
 
 	n();
-}):
+});
 
-*/
 
-app.use(bodyParser.urlencoded({parameterLimit:10}));
-app.use(bodyParser.json());
 
 //
 // app

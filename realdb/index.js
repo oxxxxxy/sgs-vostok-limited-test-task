@@ -3,30 +3,20 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
-import sqlite from 'sqlite3';
-import expressSession from 'express-session';
-import knex from 'knex';
 
-
-const KnexSessionStore = (await import('connect-session-knex')).default(expressSession);
-
-
-
-/*
- *	Global APP
- */
-
-
-
-
-
-
-
-
-
-const store = new KnexSessionStore({
-	knex: APP.knexDB
+export default (await import('knex')).default({
+	client: 'sqlite3'
+	,connection: {
+		filename: path.join(__dirname, 'sgs-task.db')
+	}
+	,useNullAsDefault: false
 });
 
 
-export default store;
+
+
+
+
+
+
+
