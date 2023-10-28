@@ -42,7 +42,6 @@ app.use(compression());
 app.use(helmet());
 
 app.use((req, res, next) => {
-	req.app.disable('x-powered-by');
 
 	res.set('X-XSS-Protection', '1; mode=block');
 
@@ -57,10 +56,12 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, "public")));
 
 
+//
+//	session and cookie thing
+//
 
 const cookie = {
-	maxAge: 30 * 1000			// i guess it is good value for demonstration purposes
-	,sameSite: true
+	sameSite: true
 };
 
 if (process.env.NODE_ENV === 'dev-deploy') {
@@ -71,7 +72,7 @@ if (process.env.NODE_ENV === 'dev-deploy') {
 
 app.use(expressSession({
 	secret: process.env.SESSION_SECRET
-	,resave: false
+	,resave: true
 	,saveUninitialized: true
 	,store: new KnexSessionStore({
 		knex: APP.knex
@@ -80,21 +81,51 @@ app.use(expressSession({
 	,cookie: cookie
 }));
 
-// TODO:
-// create, refresh session
-//		uuid
-//
-// save user pathes
-// show cookie, user acitons on pages
-//
+// i understand this is a bad design solution
+// there should be solution based on something else
+// beacause express-session aims to handle authed sessions
+// and must refresh sessionID token for security reason
 
+
+//	session handler
 
 app.use((q, s, n) => {
 	// console.log(q, '\nAAAAAAAAAAAAAAABETWEEN REQ AND RESAAAAAAAAAAAA\n', s);
+	//
+	
+	// user first time visit
+	// insert his date inside  table users
+	// get uid
+	// insert request in   table user_requests
+	//	set uid to session
+
+	//	user next time visit
+	//	get uid from session
+	//	update his last_req_date
+	//	insert request in   table user_requests
+	//
+
+	//
+	//
+	//
+	// set uid for new user add get from session store
+	//
+	// delete user and his actions after 1h
+	//
+
+	if(!q.session.uid){
+		console.log('no uid')
+		q.session.uid = 1;
+	} else{
+		console.log('has uid', q.session.uid)
+	}
 
 	n();
 });
 
+//	session sanitizer after 1h
+
+// fn delete user session, and actions
 
 
 //

@@ -1,7 +1,14 @@
-CREATE TABLE IF NOT EXISTS user_actions(
+
+CREATE TABLE IF NOT EXISTS users(
+	id INTEGER PRIMARY KEY AUTOINCREMENT
+	,last_req_date TEXT
+);
+
+CREATE TABLE IF NOT EXISTS user_requests(
 	id INTEGER PRIMARY KEY AUTOINCREMENT
 	,uid INT 
-	,req_path TEXT
+	,method TEXT
+	,path TEXT
 );
 
 

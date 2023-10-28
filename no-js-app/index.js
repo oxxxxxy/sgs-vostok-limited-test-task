@@ -4,6 +4,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 import express from 'express';
 import helmet from "helmet";
+import qs from 'qs';
 
 import u from '../utils.js';
 
@@ -21,7 +22,6 @@ const app = express();
 
 app.use(helmet());
 app.use((req, res, next) => {
-	req.app.disable('x-powered-by');
 
 	res.set('X-XSS-Protection', '1; mode=block');
 
@@ -35,11 +35,16 @@ app.set("view engine", "ejs");
 
 app.get('/', async (req, res, next) => {
 
-	console.log(req, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', res)
+	// console.log(req, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', res)
 
 	// req.
 	//	if it was nojsapp path then
 	//		previous dbQuery if has then search by it
+	//			console.log(
+	//				qs.parse(
+	//					req.originalUrl.slice(0).replace('/no-js-app?', '')
+	//				)
+	//			);
 	//		if has not, parse from new req and create/replace previous by uid
 	//	if it was any other path
 	//		just render it on page
