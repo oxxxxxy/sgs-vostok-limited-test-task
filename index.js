@@ -86,6 +86,8 @@ app.use(expressSession({
 // there should be solution based on something else
 // because express-session aims to handle authed sessions
 // and must refresh sessionID token for security reason
+// but i havenot enough experience and want to finish that task as fast as i can
+// to demonstrate my desire to become developer
 //
 // and i read some papers about designing http cookie
 // and it say that, storing user data right in the cookie is a bad solution
