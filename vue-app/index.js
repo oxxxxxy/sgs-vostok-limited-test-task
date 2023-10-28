@@ -14,12 +14,12 @@ import u from '../utils.js';
  */
 
 
-const app = express();
+const router = express.Router();
 
-app.use('/assets', express.static(path.join(__dirname, 'build', 'assets')));
+router.use('/assets', express.static(path.join(__dirname, 'build', 'assets')));
 
 
-app.get('/api/search', async (req, res) => {
+router.get('/api/search', async (req, res) => {
 
 	const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
 
@@ -65,9 +65,9 @@ app.get('/api/search', async (req, res) => {
 });
 
 
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 
-export default app;
+export default router;

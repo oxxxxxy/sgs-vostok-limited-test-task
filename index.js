@@ -40,6 +40,13 @@ app.use(compression());
 //
 
 app.use(helmet());
+app.use((req, res, next) => {
+	req.app.disable('x-powered-by');
+
+	res.set('X-XSS-Protection', '1; mode=block');
+
+  next();
+});
 
 
 //
@@ -50,10 +57,16 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 
+const cookie = {
+	maxAge: 30 * 1000			// i guess it is good value for demonstration purposes
+};
+
 if (process.env.NODE_ENV === 'dev-deploy') {
 	// httpOnly or idk
 	// trust proxy etc
 	//
+	
+	cookie.secure = true;
 
 }
 
@@ -66,11 +79,20 @@ app.use(expressSession({
 		,useNullAsDefault: false
 
 	})
+	,cookie: cookie
 }));
+
+// TODO:
+// create, refresh session
+//		uuid
+//
+// save user pathes
+// show cookie, user acitons on pages
+//
 
 
 app.use((q, s, n) => {
-	console.log(q.session);
+	console.log(q, '\nAAAAAAAAAAAAAAABETWEEN REQ AND RESAAAAAAAAAAAA\n', s);
 
 	n();
 });

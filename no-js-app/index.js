@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 import express from 'express';
+import helmet from "helmet";
 
 import u from '../utils.js';
 
@@ -12,15 +13,27 @@ import u from '../utils.js';
  * Global APP
  */
 
+// i know, this is bad design choice, but there is no way or i can't find that way
+// to use router with page render engine
 
 const app = express();
+
+
+app.use(helmet());
+app.use((req, res, next) => {
+	req.app.disable('x-powered-by');
+
+	res.set('X-XSS-Protection', '1; mode=block');
+
+  next();
+});
 
 
 app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", "ejs");
 
 
-app.get('/', async (req, res) => {
+app.get('/', async (req, res, next) => {
 
 	const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
 
