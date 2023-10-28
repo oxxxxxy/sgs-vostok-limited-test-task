@@ -40,6 +40,7 @@ app.use(compression());
 //
 
 app.use(helmet());
+
 app.use((req, res, next) => {
 	req.app.disable('x-powered-by');
 
@@ -59,12 +60,10 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const cookie = {
 	maxAge: 30 * 1000			// i guess it is good value for demonstration purposes
+	,sameSite: true
 };
 
 if (process.env.NODE_ENV === 'dev-deploy') {
-	// httpOnly or idk
-	// trust proxy etc
-	//
 	
 	cookie.secure = true;
 
@@ -73,12 +72,11 @@ if (process.env.NODE_ENV === 'dev-deploy') {
 app.use(expressSession({
 	secret: process.env.SESSION_SECRET
 	,resave: false
-	,saveUninitialized: false
+	,saveUninitialized: true
 	,store: new KnexSessionStore({
 		knex: APP.knex
-		,useNullAsDefault: false
-
 	})
+	,name: 'sid'
 	,cookie: cookie
 }));
 
@@ -92,7 +90,7 @@ app.use(expressSession({
 
 
 app.use((q, s, n) => {
-	console.log(q, '\nAAAAAAAAAAAAAAABETWEEN REQ AND RESAAAAAAAAAAAA\n', s);
+	// console.log(q, '\nAAAAAAAAAAAAAAABETWEEN REQ AND RESAAAAAAAAAAAA\n', s);
 
 	n();
 });

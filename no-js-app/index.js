@@ -13,8 +13,8 @@ import u from '../utils.js';
  * Global APP
  */
 
-// i know, this is bad design choice, but there is no way or i can't find that way
-// to use router with page render engine
+// i know, this is bad design choice, but there is no way or i can't find that way( bz this is not required )
+// to connect the express router with the page render engine
 
 const app = express();
 
@@ -34,6 +34,17 @@ app.set("view engine", "ejs");
 
 
 app.get('/', async (req, res, next) => {
+
+	console.log(req, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', res)
+
+	// req.
+	//	if it was nojsapp path then
+	//		previous dbQuery if has then search by it
+	//		if has not, parse from new req and create/replace previous by uid
+	//	if it was any other path
+	//		just render it on page
+	// const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
+
 
 	const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
 
