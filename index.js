@@ -81,10 +81,20 @@ app.use(expressSession({
 	,cookie: cookie
 }));
 
+
 // i understand this is a bad design solution
 // there should be solution based on something else
-// beacause express-session aims to handle authed sessions
+// because express-session aims to handle authed sessions
 // and must refresh sessionID token for security reason
+//
+// and i read some papers about designing http cookie
+// and it say that, storing user data right in the cookie is a bad solution
+// and i agree with that
+// because cookie must store only nessary data about auth
+// and can't be accepted via client-side JS
+// so if it important to cache some temporary user data such as list of goods
+// then devs must use localStorage( as me at vue app ) or any other client-side DB-things
+// or database on the server-side
 
 
 //	session handler
@@ -122,10 +132,6 @@ app.use((q, s, n) => {
 
 	n();
 });
-
-//	session sanitizer after 1h
-
-// fn delete user session, and actions
 
 
 //

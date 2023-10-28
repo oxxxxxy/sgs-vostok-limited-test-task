@@ -4,10 +4,9 @@ CREATE TABLE IF NOT EXISTS users(
 	,last_req_date TEXT
 );
 
-CREATE TABLE IF NOT EXISTS user_requests(
+CREATE TABLE IF NOT EXISTS user_get_requests(
 	id INTEGER PRIMARY KEY AUTOINCREMENT
 	,uid INT 
-	,method TEXT
 	,path TEXT
 );
 
