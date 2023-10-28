@@ -19,6 +19,7 @@ import noJsApp from './no-js-app/index.js';
 import vueApp from './vue-app/index.js';
 
 
+
 //
 // for simplicity, i am going to use GLOBAL
 //
@@ -62,7 +63,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const cookie = {
 	sameSite: true
-	,maxAge: 60 * 60 * 1000
+	,maxAge: 2 * 1000 // make 60 * 60 * 1000
 };
 
 if (process.env.NODE_ENV === 'dev-deploy') {
@@ -71,13 +72,108 @@ if (process.env.NODE_ENV === 'dev-deploy') {
 
 }
 
+
+const knexSesStore_Get = KnexSessionStore.prototype.get;
+KnexSessionStore.prototype.get = function (...args) {
+
+	console.log(this, args, 'get');
+
+	knexSesStore_Get.apply(this, args);	 
+}
+
+const knexSesStore_Set = KnexSessionStore.prototype.set;
+KnexSessionStore.prototype.set = function (...args) {
+
+	console.log(this, args, 'set');
+
+	knexSesStore_Set.apply(this, args);	 
+}
+
+const knexSesStore_Touch = KnexSessionStore.prototype.touch;
+KnexSessionStore.prototype.touch = function (...args) {
+
+	console.log(this, args, 'touch');
+
+	knexSesStore_Touch.apply(this, args);	 
+}
+
+const knexSesStore_Destroy = KnexSessionStore.prototype.destroy;
+KnexSessionStore.prototype.destroy = function (...args) {
+
+	console.log(this, args, 'destroy');
+
+	knexSesStore_Destroy.apply(this, args);	 
+}
+
+const knexSesStore_Length = KnexSessionStore.prototype.length;
+KnexSessionStore.prototype.length = function (...args) {
+
+	console.log(this, args, 'length');
+
+	knexSesStore_Length.apply(this, args);	 
+}
+
+const knexSesStore_Clear = KnexSessionStore.prototype.clear;
+KnexSessionStore.prototype.clear = function (...args) {
+
+	console.log(this, args, 'clear');
+
+	knexSesStore_Clear.apply(this, args);	 
+}
+
+const knexSesStore_StopDbCleanup = KnexSessionStore.prototype.stopDbCleanup;
+KnexSessionStore.prototype.stopDbCleanup = function (...args) {
+
+	console.log(this, args, 'stopDbCleanup');
+
+	knexSesStore_StopDbCleanup.apply(this, args);	 
+}
+
+const knexSesStore_GetNextDbCleanup = KnexSessionStore.prototype.getNextDbCleanup;
+KnexSessionStore.prototype.getNextDbCleanup = function (...args) {
+
+	console.log(this, args, 'getNextDbCleanup');
+
+	knexSesStore_GetNextDbCleanup.apply(this, args);	 
+}
+
+const knexSesStore_All = KnexSessionStore.prototype.all;
+KnexSessionStore.prototype.All = function (...args) {
+
+	console.log(this, args, 'all');
+
+	knexSesStore_All.apply(this, args);	 
+}
+
+
+/*
+ 
+  getNextDbCleanup: [Function (anonymous)],
+  all: 
+
+ */
+
+
+console.log(
+	// String(knexSesStoreDestroy)
+	// ,String(KnexSessionStore)
+	KnexSessionStore.prototype
+);
+
+const store = new KnexSessionStore({
+		knex: APP.knex
+	});
+
+console.log(String(store.destroy))
+
+
+
+
 app.use(expressSession({
 	secret: process.env.SESSION_SECRET
 	,resave: true
 	,saveUninitialized: true
-	,store: new KnexSessionStore({
-		knex: APP.knex
-	})
+	,store: store
 	,name: 'sid'
 	,cookie: cookie
 }));
@@ -142,24 +238,66 @@ app.use(async (req, res, next) => {
 const delay = ms => new Promise(r => setTimeout(r,  ms));
 
 const dbSanitizer = async () => {
+	// that bad solution was made only beacause i can't patch expressSession
+	// to set or can...
 
 	const limit = 50;
 	let offset = 0;
 
 	while(true) {
-
-
-//		if( no data match){
-
-//			offset = 0;
-
-//		}
-
+		
 		await delay();
+
+
+		let users;
+		try {
+
+			users = await APP.knex('users')
+				.select('*')
+				.orderBy('id', 'desc')
+				.limit(limit)
+				.offset(offset);
+
+		} catch(e) {
+			console.error(e);
+		}
+
+		// console.log(users)
+		
+		if(!users.length){
+
+			offset = 0;
+
+			continue;
+		}
+
+
+		let sessions;
+		try {
+
+			sessions = await APP.knex('sessions')
+				.select('*')
+				.limit(limit)
+				.offset(offset);
+
+		} catch(e) {
+			console.error(e);
+		}
+
+		const sessionUids = sessions.map(e => (JSON.parse(e.sess)).uid);
+
+		// console.log(sessionUids);
+
+
+		return;
+		
+
+		offset = offset + limit;
+
 	}
 }
 
-// dbSanitizer();
+dbSanitizer();
 
 
 
