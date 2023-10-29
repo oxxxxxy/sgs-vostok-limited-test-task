@@ -111,13 +111,9 @@ app.use(async (req, res, next) => {
 
 		const access_date = (new Date()).toISOString();
 
-		try {
-			const res = await APP.knex('users').returning('id').insert({access_date});
+		const res = await APP.knex('users').returning('id').insert({access_date});
 
-			req.session.uid = res[0].id;
-		} catch(e) {
-			console.error(e);
-		}
+		req.session.uid = res[0].id;
 	
 	}
 
