@@ -26,25 +26,17 @@ router.get('/api/search', async (req, res) => {
 	const rows = await APP.DB.query(dbQuery);
 
 
-	const cities = rows.filter(
-		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`city`)
-	).map(e => e.city);
+	const cities = u.getListOfUniqValuesFromRows(rows, 'city');
 
-	const plantShops = rows.filter(
-		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`plantShop`)
-	).map(e => e.plantShop);
+	const plantShops = u.getListOfUniqValuesFromRows(rows, 'plantShop');
 
-	const emploees = rows.map(e => e.emploee);
+	const emploees = u.getListOfUniqValuesFromRows(rows, 'emploee');
 
-	const workFrom = rows.filter(
-		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`workFrom`)
-	).map(e => e.workFrom);
+	const workFrom = u.getListOfUniqValuesFromRows(rows, 'workFrom');
 
-	const workUntil = rows.filter(
-		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`workUntil`)
-	).map(e => e.workUntil);
+	const workUntil = u.getListOfUniqValuesFromRows(rows, 'workUntil');
 
-	const workSchelude = workFrom.map((e, i) => 
+	ejsOptions.workSchelude = workFrom.map((e, i) => 
 		(
 			{
 				from: e

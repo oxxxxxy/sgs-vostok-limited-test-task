@@ -101,11 +101,11 @@ app.get('/', async (req, res) => {
 
 		const rows = await APP.DB.query(dbQuery);
 	
-		ejsOptions.cities = u.getListOfUniqValuesFromRows(examplesRows, 'city');
+		ejsOptions.cities = u.getListOfUniqValuesFromRows(rows, 'city');
 
-		ejsOptions.plantShops = u.getListOfUniqValuesFromRows(examplesRows, 'plantShop');
+		ejsOptions.plantShops = u.getListOfUniqValuesFromRows(rows, 'plantShop');
 	
-		ejsOptions.emploees = u.getListOfUniqValuesFromRows(examplesRows, 'emploee');
+		ejsOptions.emploees = u.getListOfUniqValuesFromRows(rows, 'emploee');
 
 		ejsOptions.rows = rows;
 
