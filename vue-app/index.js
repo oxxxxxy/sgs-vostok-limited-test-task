@@ -36,7 +36,7 @@ router.get('/api/search', async (req, res) => {
 
 	const workUntil = u.getListOfUniqValuesFromRows(rows, 'workUntil');
 
-	ejsOptions.workSchelude = workFrom.map((e, i) => 
+	const workSchelude = workFrom.map((e, i) => 
 		(
 			{
 				from: e
