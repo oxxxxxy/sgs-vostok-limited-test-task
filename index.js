@@ -63,7 +63,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const cookie = {
 	sameSite: true
-	,maxAge: 2 * 1000 // make 60 * 60 * 1000
+	,maxAge: 60 * 60 * 1000
 };
 
 if (process.env.NODE_ENV === 'dev-deploy') {
@@ -72,108 +72,13 @@ if (process.env.NODE_ENV === 'dev-deploy') {
 
 }
 
-
-const knexSesStore_Get = KnexSessionStore.prototype.get;
-KnexSessionStore.prototype.get = function (...args) {
-
-	console.log(this, args, 'get');
-
-	knexSesStore_Get.apply(this, args);	 
-}
-
-const knexSesStore_Set = KnexSessionStore.prototype.set;
-KnexSessionStore.prototype.set = function (...args) {
-
-	console.log(this, args, 'set');
-
-	knexSesStore_Set.apply(this, args);	 
-}
-
-const knexSesStore_Touch = KnexSessionStore.prototype.touch;
-KnexSessionStore.prototype.touch = function (...args) {
-
-	console.log(this, args, 'touch');
-
-	knexSesStore_Touch.apply(this, args);	 
-}
-
-const knexSesStore_Destroy = KnexSessionStore.prototype.destroy;
-KnexSessionStore.prototype.destroy = function (...args) {
-
-	console.log(this, args, 'destroy');
-
-	knexSesStore_Destroy.apply(this, args);	 
-}
-
-const knexSesStore_Length = KnexSessionStore.prototype.length;
-KnexSessionStore.prototype.length = function (...args) {
-
-	console.log(this, args, 'length');
-
-	knexSesStore_Length.apply(this, args);	 
-}
-
-const knexSesStore_Clear = KnexSessionStore.prototype.clear;
-KnexSessionStore.prototype.clear = function (...args) {
-
-	console.log(this, args, 'clear');
-
-	knexSesStore_Clear.apply(this, args);	 
-}
-
-const knexSesStore_StopDbCleanup = KnexSessionStore.prototype.stopDbCleanup;
-KnexSessionStore.prototype.stopDbCleanup = function (...args) {
-
-	console.log(this, args, 'stopDbCleanup');
-
-	knexSesStore_StopDbCleanup.apply(this, args);	 
-}
-
-const knexSesStore_GetNextDbCleanup = KnexSessionStore.prototype.getNextDbCleanup;
-KnexSessionStore.prototype.getNextDbCleanup = function (...args) {
-
-	console.log(this, args, 'getNextDbCleanup');
-
-	knexSesStore_GetNextDbCleanup.apply(this, args);	 
-}
-
-const knexSesStore_All = KnexSessionStore.prototype.all;
-KnexSessionStore.prototype.All = function (...args) {
-
-	console.log(this, args, 'all');
-
-	knexSesStore_All.apply(this, args);	 
-}
-
-
-/*
- 
-  getNextDbCleanup: [Function (anonymous)],
-  all: 
-
- */
-
-
-console.log(
-	// String(knexSesStoreDestroy)
-	// ,String(KnexSessionStore)
-	KnexSessionStore.prototype
-);
-
-const store = new KnexSessionStore({
-		knex: APP.knex
-	});
-
-console.log(String(store.destroy))
-
-
-
-
 app.use(expressSession({
 	secret: process.env.SESSION_SECRET
 	,resave: true
 	,saveUninitialized: true
-	,store: store
+	,store: new KnexSessionStore({
+			knex: APP.knex
+		})
 	,name: 'sid'
 	,cookie: cookie
 }));
@@ -183,9 +88,10 @@ app.use(expressSession({
 // there should be solution based on something else
 // because express-session aims to handle authed sessions
 // and must refresh sessionID token for security reason
-// but i havenot enough experience and want to finish that task as fast as i can
+// but i havenot enough experience to find out right way
+// and i want to finish that task
 // to demonstrate my desire to become developer and get more experience as possible
-// if i have enough time i will recode this solution to a more right one
+// if i have enough time i will recode this solution to a more right one i guess
 //
 // and i read some papers about designing http cookie
 // and it say that, storing user data right in the cookie is a bad solution
@@ -202,11 +108,6 @@ app.use(expressSession({
 app.use(async (req, res, next) => {
 
 	if(!req.session.uid){
-		// user first time visit
-		// insert his date inside  table users
-		// get uid
-		// insert request at every path in   table user_requests
-		//	set uid to session
 
 		const access_date = (new Date()).toISOString();
 
@@ -219,27 +120,19 @@ app.use(async (req, res, next) => {
 		}
 	
 	}
-	//	user next time visit
-	//	get uid from session
-	//	insert request in   table user_requests
-
 
 	next();
 });
 
-// db sanitizer of user and his reqs after expired time
 
-// fn setInterval(() => {})
-// search users limit 50
-// search each user in session
-//		if session has not this user delete all his data
-//
+// db sanitizer of user and his reqs after expired time
 
 const delay = ms => new Promise(r => setTimeout(r,  ms));
 
 const dbSanitizer = async () => {
 	// that bad solution was made only beacause i can't patch expressSession
-	// to set or can...
+	// to access destoying sessions to remove users and their data too
+	// but i will find out better solution
 
 	const limit = 50;
 	let offset = 0;
@@ -249,21 +142,16 @@ const dbSanitizer = async () => {
 		await delay();
 
 
-		let users;
-		try {
+		const hourAgo = new Date(Date.now() - 60*60*1000)
 
-			users = await APP.knex('users')
+		const users = await APP.knex('users')
 				.select('*')
-				.orderBy('id', 'desc')
+				.where('access_date', '<', hourAgo.toISOString())
+				.orderBy('access_date', 'asc')
 				.limit(limit)
 				.offset(offset);
 
-		} catch(e) {
-			console.error(e);
-		}
 
-		// console.log(users)
-		
 		if(!users.length){
 
 			offset = 0;
@@ -272,24 +160,15 @@ const dbSanitizer = async () => {
 		}
 
 
-		let sessions;
-		try {
+		const uids = users.map(e => e.id);
 
-			sessions = await APP.knex('sessions')
-				.select('*')
-				.limit(limit)
-				.offset(offset);
+		await APP.knex('user_get_requests')
+			.whereIn('uid', uids)
+			.del()
 
-		} catch(e) {
-			console.error(e);
-		}
-
-		const sessionUids = sessions.map(e => (JSON.parse(e.sess)).uid);
-
-		// console.log(sessionUids);
-
-
-		return;
+		await APP.knex('users')
+			.whereIn('id', uids)
+			.del()
 		
 
 		offset = offset + limit;
@@ -298,7 +177,6 @@ const dbSanitizer = async () => {
 }
 
 dbSanitizer();
-
 
 
 //
@@ -310,13 +188,6 @@ app.use('/vue-app', vueApp);
 
 const indexPage = pug.compileFile('./index.pug')();
 app.get('/', async (req, res) => {
-	
-	try {
-		await APP.knex('user_get_requests').insert({uid: req.session.uid, path: req.originalUrl});
-	} catch (e) {
-		console.error(e);
-	}
-
 	res.send(indexPage);
 });
 

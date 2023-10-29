@@ -9,6 +9,7 @@ import qs from 'qs';
 import u from '../utils.js';
 
 
+const RE_questionMark = /\?/;
 
 /*
  * Global APP
@@ -35,78 +36,91 @@ app.set("view engine", "ejs");
 
 app.get('/', async (req, res) => {
 
-	try {
-		await APP.knex('user_get_requests').insert({uid: req.session.uid, path: req.originalUrl});
-	} catch (e) {
-		console.error(e);
+	let dbQuery;
+
+	// getting cached query parameters if it were
+	if(!RE_questionMark.test(req.originalUrl)){
+		const lastPath = (
+			await APP.knex('user_get_requests').orderBy('id', 'desc').limit(1)
+		)[0].path;
+	
+		// check does previous path has query params and make dbQuery if has
+		if(RE_questionMark.test(lastPath)){
+
+			const prevQuery = qs.parse(lastPath.replace('/no-js-app?', ''));
+
+			dbQuery = u.makeDBQueryFromReqParamQuery(prevQuery, APP.config.allowedQueryParameters);
+		}
+
+	} else {
+		if(!u.isEmpty(req.query)){
+			dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
+		}
 	}
 
-	// console.log(req, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', res)
 
-	// req.
-	//	if it was nojsapp path then
-	//		previous dbQuery if has then search by it
-	//			console.log(
-	//				qs.parse(
-	//					req.originalUrl.slice(0).replace('/no-js-app?', '')
-	//				)
-	//			);
-	//		if has not, parse from new req and create/replace previous by uid
-	//	if it was any other path
-	//		just render it on page
-	// const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
+	await APP.knex('user_get_requests').insert({uid: req.session.uid, path: req.originalUrl});
 
-
-	const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
-
-
-	const rows = await APP.DB.query(dbQuery);
 
 	const ejsOptions = {};
 
+	
+	//load examples
+	const examplesRows = await APP.DB.query({});
+	
+	ejsOptions.examples = {};
 
-	ejsOptions.cities = rows.filter(
+	ejsOptions.examples.cities = examplesRows.filter(
 		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`city`)
 	).map(e => e.city);
-	ejsOptions.cityExamples = ejsOptions.cities.slice(0, 5);
 
-	ejsOptions.plantShops = rows.filter(
+	ejsOptions.examples.plantShops = examplesRows.filter(
 		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`plantShop`)
 	).map(e => e.plantShop);
-	ejsOptions.plantShopExamples = ejsOptions.plantShops.slice(0, 5);
 
-	ejsOptions.emploees = rows.map(e => e.emploee);
-	ejsOptions.emploeeExamples = ejsOptions.emploees.slice(0, 5);
-
-
-	const workFrom = rows.filter(
-		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`workFrom`)
-	).map(e => e.workFrom);
-
-	const workUntil = rows.filter(
-		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`workUntil`)
-	).map(e => e.workUntil);
-
-	ejsOptions.workSchelude = workFrom.map((e, i) => 
-		(
-			{
-				from: e
-				,until: workUntil[i]
-			}
-		)
-	);
+	ejsOptions.examples.emploees = examplesRows.filter(
+		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`emploee`)
+	).map(e => e.emploee);
 
 
-	ejsOptions.rows = [];
+	if(!u.isEmpty(dbQuery)){
 
-	if(!u.isEmpty(req.query)){
+		const rows = await APP.DB.query(dbQuery);
+
+		ejsOptions.cities = rows.filter(
+			u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`city`)
+		).map(e => e.city);
+
+		ejsOptions.plantShops = rows.filter(
+			u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`plantShop`)
+		).map(e => e.plantShop);
+
+		ejsOptions.emploees = rows.map(e => e.emploee);
+
+		const workFrom = rows.filter(
+			u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`workFrom`)
+		).map(e => e.workFrom);
+
+		const workUntil = rows.filter(
+			u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`workUntil`)
+		).map(e => e.workUntil);
+
+		ejsOptions.workSchelude = workFrom.map((e, i) => 
+			(
+				{
+					from: e
+					,until: workUntil[i]
+				}
+			)
+		);
+
 		ejsOptions.rows = rows;
+
+		if(!rows.length) {
+			ejsOptions.noMatches = true;
+		}
 	}
 
-
-	if(!rows.length) {	
-		ejsOptions.noMatches = true;
-	}
 
 	res.render('index', ejsOptions);
 

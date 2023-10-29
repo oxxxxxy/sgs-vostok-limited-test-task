@@ -20,12 +20,6 @@ router.use('/assets', express.static(path.join(__dirname, 'build', 'assets')));
 
 
 router.get('/api/search', async (req, res) => {
-	
-	try {
-		await APP.knex('user_get_requests').insert({uid: req.session.uid, path: req.originalUrl});
-	} catch (e) {
-		console.error(e);
-	}
 
 	const dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
 
@@ -72,13 +66,6 @@ router.get('/api/search', async (req, res) => {
 
 
 router.get('/', async (req, res) => {
-
-	try {
-		await APP.knex('user_get_requests').insert({uid: req.session.uid, path: req.originalUrl});
-	} catch (e) {
-		console.error(e);
-	}
-
 	res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 

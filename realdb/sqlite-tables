@@ -9,8 +9,3 @@ CREATE TABLE IF NOT EXISTS user_get_requests(
 	,uid INT 
 	,path TEXT
 );
-
-CREATE TABLE IF NOT EXISTS sessions_and_users(
-	uid INTEGER PRIMARY KEY AUTOINCREMENT
-	,
-)
