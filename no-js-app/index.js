@@ -62,57 +62,50 @@ app.get('/', async (req, res) => {
 	await APP.knex('user_get_requests').insert({uid: req.session.uid, path: req.originalUrl});
 
 
-	const ejsOptions = {};
+	const ejsOptions = {
+		examples: {}
+	};
 
 	
-	//load examples
+	//load first time visit and examples 
 	const examplesRows = await APP.DB.query({});
+
+	ejsOptions.cities = u.getListOfUniqValuesFromRows(examplesRows, 'city');
+	ejsOptions.examples.cities = ejsOptions.cities;
+
+	ejsOptions.plantShops = u.getListOfUniqValuesFromRows(examplesRows, 'plantShop');
+	ejsOptions.examples.plantShops = ejsOptions.plantShops;
 	
-	ejsOptions.examples = {};
-
-	ejsOptions.examples.cities = examplesRows.filter(
-		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`city`)
-	).map(e => e.city);
-
-	ejsOptions.examples.plantShops = examplesRows.filter(
-		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`plantShop`)
-	).map(e => e.plantShop);
-
-	ejsOptions.examples.emploees = examplesRows.filter(
-		u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`emploee`)
-	).map(e => e.emploee);
+	ejsOptions.emploees = u.getListOfUniqValuesFromRows(examplesRows, 'emploee');
+	ejsOptions.examples.emploees = ejsOptions.emploees;
 
 
-	if(!u.isEmpty(dbQuery)){
+	// workSchelude options 
+	const workFrom = u.getListOfUniqValuesFromRows(examplesRows, 'workFrom');
+
+	const workUntil = u.getListOfUniqValuesFromRows(examplesRows, 'workUntil');
+
+	ejsOptions.workSchelude = workFrom.map((e, i) => 
+		(
+			{
+				from: e
+				,until: workUntil[i]
+			}
+		)
+	);
+
+
+	ejsOptions.rows = [];
+
+	if(dbQuery){
 
 		const rows = await APP.DB.query(dbQuery);
+	
+		ejsOptions.cities = u.getListOfUniqValuesFromRows(examplesRows, 'city');
 
-		ejsOptions.cities = rows.filter(
-			u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`city`)
-		).map(e => e.city);
-
-		ejsOptions.plantShops = rows.filter(
-			u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`plantShop`)
-		).map(e => e.plantShop);
-
-		ejsOptions.emploees = rows.map(e => e.emploee);
-
-		const workFrom = rows.filter(
-			u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`workFrom`)
-		).map(e => e.workFrom);
-
-		const workUntil = rows.filter(
-			u.getFnFilterObjsByPropValueAndGetArrOfPropValues(`workUntil`)
-		).map(e => e.workUntil);
-
-		ejsOptions.workSchelude = workFrom.map((e, i) => 
-			(
-				{
-					from: e
-					,until: workUntil[i]
-				}
-			)
-		);
+		ejsOptions.plantShops = u.getListOfUniqValuesFromRows(examplesRows, 'plantShop');
+	
+		ejsOptions.emploees = u.getListOfUniqValuesFromRows(examplesRows, 'emploee');
 
 		ejsOptions.rows = rows;
 

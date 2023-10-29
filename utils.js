@@ -81,6 +81,11 @@ const getFnFilterObjsByPropValueAndGetArrOfPropValues = prop =>
 		) ? e[prop] : false	;
 
 
+const getListOfUniqValuesFromRows = (rows, prop) => rows.filter(
+		getFnFilterObjsByPropValueAndGetArrOfPropValues(prop)
+	).map(e => e[prop]);
+
+
 
 export default {
 	isEmpty
@@ -92,4 +97,5 @@ export default {
 	,makeDBQueryFromReqParamQuery
 	,compareTwoObjPropValues
 	,getFnFilterObjsByPropValueAndGetArrOfPropValues
+	,getListOfUniqValuesFromRows
 }
