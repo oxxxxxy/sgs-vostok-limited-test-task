@@ -40,18 +40,21 @@ app.get('/', async (req, res) => {
 
 	// getting cached query parameters if it were
 	if(!RE_questionMark.test(req.originalUrl)){
-		const lastPath = (
-			await APP.knex('user_get_requests').orderBy('id', 'desc').limit(1)
-		)[0].path;
-	
-		// check does previous path has query params and make dbQuery if has
-		if(RE_questionMark.test(lastPath)){
+		
+		const row = await APP.knex('user_get_requests').orderBy('id', 'desc').limit(1);
 
-			const prevQuery = qs.parse(lastPath.replace('/no-js-app?', ''));
+		if(row.length){
 
-			dbQuery = u.makeDBQueryFromReqParamQuery(prevQuery, APP.config.allowedQueryParameters);
+			const lastPath = row[0].path;
+		
+			// check does previous path has query params and make dbQuery if has
+			if(RE_questionMark.test(lastPath)){
+
+				const prevQuery = qs.parse(lastPath.replace('/no-js-app?', ''));
+
+				dbQuery = u.makeDBQueryFromReqParamQuery(prevQuery, APP.config.allowedQueryParameters);
+			}
 		}
-
 	} else {
 		if(!u.isEmpty(req.query)){
 			dbQuery = u.makeDBQueryFromReqParamQuery(req.query, APP.config.allowedQueryParameters);
