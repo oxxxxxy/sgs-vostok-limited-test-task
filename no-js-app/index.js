@@ -4,7 +4,6 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 import express from 'express';
-import helmet from "helmet";
 import ejs from 'ejs';
 import qs from 'qs';
 
@@ -18,16 +17,16 @@ const RE_questionMark = /\?/;
  */
 
 
-const router = express.Router();
-
-
 const viewsPath = path.join(__dirname, 'views');
 
 const indexPagePath = path.join(viewsPath, 'index.ejs');
 
-const index = fs.readFileSync(indexPagePath, 'utf8');
+const indexPage = fs.readFileSync(indexPagePath, 'utf8');
 
-const indexPageTemplate = ejs.compile(index, { filename: indexPagePath });
+const indexPageTemplate = ejs.compile(indexPage, { filename: indexPagePath });
+
+
+const router = express.Router();
 
 
 router.get('/', async (req, res) => {
