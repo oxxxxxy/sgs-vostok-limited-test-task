@@ -1,9 +1,11 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 import express from 'express';
 import helmet from "helmet";
+import ejs from 'ejs';
 import qs from 'qs';
 
 import u from '../utils.js';
@@ -15,26 +17,20 @@ const RE_questionMark = /\?/;
  * Global APP
  */
 
-// i know, this is bad design choice, but there is no way or i can't find that way( bz this is not required )
-// to connect the express router with the page render engine
 
-const app = express();
+const router = express.Router();
 
 
-app.use(helmet());
-app.use((req, res, next) => {
+const viewsPath = path.join(__dirname, 'views');
 
-	res.set('X-XSS-Protection', '1; mode=block');
+const indexPagePath = path.join(viewsPath, 'index.ejs');
 
-  next();
-});
+const index = fs.readFileSync(indexPagePath, 'utf8');
 
-
-app.set('views', path.join(__dirname, 'views'));
-app.set("view engine", "ejs");
+const indexPageTemplate = ejs.compile(index, { filename: indexPagePath });
 
 
-app.get('/', async (req, res) => {
+router.get('/', async (req, res) => {
 
 	let dbQuery;
 
@@ -65,7 +61,7 @@ app.get('/', async (req, res) => {
 	await APP.knex('user_get_requests').insert({uid: req.session.uid, path: req.originalUrl});
 
 
-	const ejsOptions = {
+	const data = {
 		examples: {}
 	};
 
@@ -73,14 +69,14 @@ app.get('/', async (req, res) => {
 	//load first time visit and examples 
 	const examplesRows = await APP.DB.query({});
 
-	ejsOptions.cities = u.getListOfUniqValuesFromRows(examplesRows, 'city');
-	ejsOptions.examples.cities = ejsOptions.cities;
+	data.cities = u.getListOfUniqValuesFromRows(examplesRows, 'city');
+	data.examples.cities = data.cities;
 
-	ejsOptions.plantShops = u.getListOfUniqValuesFromRows(examplesRows, 'plantShop');
-	ejsOptions.examples.plantShops = ejsOptions.plantShops;
+	data.plantShops = u.getListOfUniqValuesFromRows(examplesRows, 'plantShop');
+	data.examples.plantShops = data.plantShops;
 	
-	ejsOptions.emploees = u.getListOfUniqValuesFromRows(examplesRows, 'emploee');
-	ejsOptions.examples.emploees = ejsOptions.emploees;
+	data.emploees = u.getListOfUniqValuesFromRows(examplesRows, 'emploee');
+	data.examples.emploees = data.emploees;
 
 
 	// workSchelude options 
@@ -88,7 +84,7 @@ app.get('/', async (req, res) => {
 
 	const workUntil = u.getListOfUniqValuesFromRows(examplesRows, 'workUntil');
 
-	ejsOptions.workSchelude = workFrom.map((e, i) => 
+	data.workSchelude = workFrom.map((e, i) => 
 		(
 			{
 				from: e
@@ -98,29 +94,30 @@ app.get('/', async (req, res) => {
 	);
 
 
-	ejsOptions.rows = [];
+	data.rows = [];
 
 	if(dbQuery){
 
 		const rows = await APP.DB.query(dbQuery);
 	
-		ejsOptions.cities = u.getListOfUniqValuesFromRows(rows, 'city');
+		data.cities = u.getListOfUniqValuesFromRows(rows, 'city');
 
-		ejsOptions.plantShops = u.getListOfUniqValuesFromRows(rows, 'plantShop');
+		data.plantShops = u.getListOfUniqValuesFromRows(rows, 'plantShop');
 	
-		ejsOptions.emploees = u.getListOfUniqValuesFromRows(rows, 'emploee');
+		data.emploees = u.getListOfUniqValuesFromRows(rows, 'emploee');
 
-		ejsOptions.rows = rows;
+		data.rows = rows;
 
 		if(!rows.length) {
-			ejsOptions.noMatches = true;
+			data.noMatches = true;
 		}
 	}
 
 
-	res.render('index', ejsOptions);
+	res.send(indexPageTemplate(data));
 
 });
 
 
-export default app;
+export default router;
+
